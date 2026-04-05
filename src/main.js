@@ -10,6 +10,18 @@ import { renderNetwork } from './slices/networks/canvas.js';
 import { MOD_CRYPTO } from './slices/crypto/data.js';
 import { renderCrypto } from './slices/crypto/canvas.js';
 
+import { MOD_DB } from './slices/db/data.js';
+import { renderDB } from './slices/db/canvas.js';
+
+import { MOD_CONC } from './slices/concurrency/data.js';
+import { renderConcurrency } from './slices/concurrency/canvas.js';
+
+import { MOD_COMP } from './slices/compilers/data.js';
+import { renderCompilers } from './slices/compilers/canvas.js';
+
+import { MOD_DIST } from './slices/distributed/data.js';
+import { renderDistributed } from './slices/distributed/canvas.js';
+
 import { MOD_AI } from './slices/ai/data.js';
 import { renderAI } from './slices/ai/canvas.js';
 
@@ -28,6 +40,10 @@ const App = {
       os: MOD_OS,
       net: MOD_NETWORKS,
       crypto: MOD_CRYPTO,
+      db: MOD_DB,
+      conc: MOD_CONC,
+      comp: MOD_COMP,
+      dist: MOD_DIST,
       ai: MOD_AI
     };
 
@@ -96,6 +112,10 @@ const App = {
       else if(activeTheme.value === 'os') currentEngine = renderOS(cvs);
       else if(activeTheme.value === 'net') currentEngine = renderNetwork(cvs);
       else if(activeTheme.value === 'crypto') currentEngine = renderCrypto(cvs);
+      else if(activeTheme.value === 'db') currentEngine = renderDB(cvs);
+      else if(activeTheme.value === 'conc') currentEngine = renderConcurrency(cvs);
+      else if(activeTheme.value === 'comp') currentEngine = renderCompilers(cvs);
+      else if(activeTheme.value === 'dist') currentEngine = renderDistributed(cvs);
       else if(activeTheme.value === 'ai') currentEngine = renderAI(cvs);
 
       if(currentEngine && currentEngine.drawStep) {

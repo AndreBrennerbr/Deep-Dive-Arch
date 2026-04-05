@@ -15,10 +15,14 @@
     <div class="brand" @click="goHome()" style="cursor:pointer">Deep<span>Dive</span> Architecture</div>
     <div class="nav-tabs" v-if="!isHome">
       <button :class="{ active: activeTheme === 'cpu' }" data-theme="cpu" @click="setTheme('cpu')">🖥️ 1. Arq. Computadores</button>
-      <button :class="{ active: activeTheme === 'os' }" data-theme="os" @click="setTheme('os')">⚙️ 2. Sistemas Operacionais</button>
+      <button :class="{ active: activeTheme === 'os' }" data-theme="os" @click="setTheme('os')">⚙️ 2. Sist. Operacionais</button>
       <button :class="{ active: activeTheme === 'net' }" data-theme="net" @click="setTheme('net')">🌐 3. Redes</button>
       <button :class="{ active: activeTheme === 'crypto' }" data-theme="crypto" @click="setTheme('crypto')">🔐 4. Criptografia</button>
-      <button :class="{ active: activeTheme === 'ai' }" data-theme="ai" @click="setTheme('ai')">🧠 5. IA & LLMs</button>
+      <button :class="{ active: activeTheme === 'db' }" data-theme="db" @click="setTheme('db')">🗄️ 5. Banco de Dados</button>
+      <button :class="{ active: activeTheme === 'conc' }" data-theme="conc" @click="setTheme('conc')">🔄 6. Concorrência</button>
+      <button :class="{ active: activeTheme === 'comp' }" data-theme="comp" @click="setTheme('comp')">🏗️ 7. Compiladores</button>
+      <button :class="{ active: activeTheme === 'dist' }" data-theme="dist" @click="setTheme('dist')">🌍 8. Distribuídos</button>
+      <button :class="{ active: activeTheme === 'ai' }" data-theme="ai" @click="setTheme('ai')">🧠 9. IA & LLMs</button>
     </div>
   </header>
 
@@ -30,7 +34,8 @@
       <p class="hero-sub">Estudo técnico aprofundado, do jeito que deveria ser.</p>
       <p class="hero-desc">Chega de explicações superficiais. Cada tema é dissecado com <strong>diagramas animados</strong>, 
         <strong>referências primárias</strong> (RFCs, papers, código-fonte) e conteúdo que não pula detalhes — 
-        do ciclo fetch-decode-execute no CPU, passando por processos, threads, scheduling e syscalls no SO, 
+        do ciclo fetch-decode-execute no CPU, scheduling e syscalls no SO, concorrência lock-free e memory models,
+        B-Trees e MVCC em bancos de dados, lexers/parsers e JIT em compiladores, Raft e CRDTs em sistemas distribuídos,
         pacotes na rede, handshake TLS, até o token no Transformer.</p>
     </section>
 
@@ -57,6 +62,30 @@
         <div class="card-icon">🔐</div>
         <h3>Criptografia & Segurança</h3>
         <p>Hashing SHA-256, AES & modos de operação, RSA vs ECC, Diffie-Hellman/ECDHE, Certificados X.509 e TLS 1.3 deep dive.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-db" @click="setTheme('db')">
+        <div class="card-icon">🗄️</div>
+        <h3>Banco de Dados Internals</h3>
+        <p>Storage Engines B-Tree vs LSM, Indexação B+Tree/Hash/GIN, Query Processing & CBO, Transações ACID & MVCC, Buffer Pool e Replicação.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-conc" @click="setTheme('conc')">
+        <div class="card-icon">🔄</div>
+        <h3>Concorrência & Paralelismo</h3>
+        <p>Amdahl's Law, Memory Models & Ordering, Lock-Free CAS & Treiber Stack, Actor Model & CSP, MESI Cache Coherence, Async/Await & Coroutines.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-comp" @click="setTheme('comp')">
+        <div class="card-icon">🏗️</div>
+        <h3>Compiladores & Interpretadores</h3>
+        <p>Lexer & DFA, Parser & AST, Análise Semântica & Types, IR & SSA, Otimizações, CodeGen, JIT & Garbage Collection.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-dist" @click="setTheme('dist')">
+        <div class="card-icon">🌍</div>
+        <h3>Sistemas Distribuídos</h3>
+        <p>CAP Theorem & 8 Fallacies, Relógios Lógicos & Vetoriais, Consenso Raft, CRDTs, Consistent Hashing e Kafka/Spanner/Dynamo.</p>
         <span class="card-steps">6 steps</span>
       </div>
       <div class="home-card card-ai" @click="setTheme('ai')">

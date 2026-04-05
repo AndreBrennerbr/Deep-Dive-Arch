@@ -1,16 +1,18 @@
 # 🚀 DeepDive Architecture
 
-Plataforma interativa de estudo técnico aprofundado. Cada tema é um **slice** independente com conteúdo detalhado, referências e diagramas animados em Canvas 2D — sem simplificações, sem pular etapas.
+Plataforma interativa de estudo técnico aprofundado sobre **fundamentos de computação**. Cada tema é um **slice** independente com conteúdo detalhado, referências primárias (RFCs, papers, código-fonte) e diagramas animados em Canvas 2D — sem simplificações, sem pular etapas.
 
-A ideia é crescer organicamente: novos slices podem ser adicionados a qualquer momento sem alterar os existentes.
+### 🗺️ Roadmap de Aprendizado
 
-### Slices disponíveis
+Os slices formam um currículo coerente, do hardware até a inteligência artificial:
 
-| Slice | Steps | Destaques |
-|-------|-------|-----------|
-| 🌐 Fundamentos de Redes | 6 | OSI/TCP-IP, Encapsulamento, DNS, TCP, UDP/QUIC, TLS 1.3 |
-| ⚙️ Node.js Internals | 7 | syscalls, epoll/Event Loop, V8 Bindings, Thread Pool, Buffers, llhttp, Streams |
-| 🧠 IA & LLMs | 8 | Redes Neurais, BPE, Embeddings, Positional Encoding, Transformer, Attention, Treinamento, Sampling |
+| # | Slice | Steps | Destaques |
+|---|-------|-------|-----------|
+| 1 | 🖥️ Arquitetura de Computadores | 6 | Von Neumann, Registradores & ISA, Cache L1/L2/L3, Pipeline & Branch Prediction, GPU vs CPU/SIMD, Memória Virtual |
+| 2 | ⚙️ Sistemas Operacionais | 6 | Processos & PCB, CPU Scheduling (CFS), Threads & Concorrência, Memória & Paginação, Syscalls & I/O, File Systems |
+| 3 | 🌐 Fundamentos de Redes | 6 | OSI/TCP-IP, Encapsulamento, DNS, TCP Handshake, UDP/QUIC, TLS 1.3 |
+| 4 | 🔐 Criptografia & Segurança | 6 | Hashing SHA-256, AES & Modos de Operação, RSA vs ECC, Diffie-Hellman/ECDHE, Certificados X.509/PKI, TLS 1.3 Deep Dive |
+| 5 | 🧠 IA & LLMs | 8 | Redes Neurais, BPE, Embeddings, Positional Encoding, Transformer, Attention QKV, Treinamento, Sampling |
 
 <br>
 
@@ -29,13 +31,19 @@ src/
 │   ├── lib/engine.js          # BaseRenderer (Canvas 2D)
 │   └── ui/styles.css          # Tema dark, layout responsivo
 └── slices/
-    ├── ai/                    # Slice: IA & LLMs
+    ├── cpu/                   # Slice: Arquitetura de Computadores
+    │   ├── data.js
+    │   └── canvas.js
+    ├── os/                    # Slice: Sistemas Operacionais
     │   ├── data.js
     │   └── canvas.js
     ├── networks/              # Slice: Fundamentos de Redes
     │   ├── data.js
     │   └── canvas.js
-    └── nodejs/                # Slice: Node.js Internals
+    ├── crypto/                # Slice: Criptografia & Segurança
+    │   ├── data.js
+    │   └── canvas.js
+    └── ai/                    # Slice: IA & LLMs
         ├── data.js
         └── canvas.js
 ```

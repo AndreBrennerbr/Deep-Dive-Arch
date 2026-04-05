@@ -25,6 +25,12 @@ import { renderDistributed } from './slices/distributed/canvas.js';
 import { MOD_AI } from './slices/ai/data.js';
 import { renderAI } from './slices/ai/canvas.js';
 
+import { MOD_DSA } from './slices/dsa/data.js';
+import { renderDSA } from './slices/dsa/canvas.js';
+
+import { MOD_MATH } from './slices/math/data.js';
+import { renderMath } from './slices/math/canvas.js';
+
 const { createApp, ref, computed, watch, nextTick, onMounted } = Vue;
 
 const App = {
@@ -45,10 +51,12 @@ const App = {
       conc: MOD_CONC,
       comp: MOD_COMP,
       dist: MOD_DIST,
-      ai: MOD_AI
+      ai: MOD_AI,
+      dsa: MOD_DSA,
+      math: MOD_MATH
     };
 
-    const MODULE_ICONS = { cpu: '🖥️', os: '⚙️', net: '🌐', crypto: '🔐', db: '🗄️', conc: '🔄', comp: '🏗️', dist: '🌍', ai: '🧠' };
+    const MODULE_ICONS = { cpu: '🖥️', os: '⚙️', net: '🌐', crypto: '🔐', db: '🗄️', conc: '🔄', comp: '🏗️', dist: '🌍', ai: '🧠', dsa: '💾', math: '📐' };
     const currentModuleIcon = computed(() => MODULE_ICONS[activeTheme.value]);
     const allModuleKeys = Object.keys(MODULES);
     const getModuleIcon = (key) => MODULE_ICONS[key];
@@ -125,6 +133,8 @@ const App = {
       else if(activeTheme.value === 'comp') currentEngine = renderCompilers(cvs);
       else if(activeTheme.value === 'dist') currentEngine = renderDistributed(cvs);
       else if(activeTheme.value === 'ai') currentEngine = renderAI(cvs);
+      else if(activeTheme.value === 'dsa') currentEngine = renderDSA(cvs);
+      else if(activeTheme.value === 'math') currentEngine = renderMath(cvs);
 
       if(currentEngine && currentEngine.drawStep) {
          currentEngine.drawStep(stepIdx.value);

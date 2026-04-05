@@ -17,6 +17,8 @@ Os slices formam um currículo coerente, do hardware até a inteligência artifi
 | 7 | 🏗️ Compiladores & Interpretadores | 6 | Lexer & DFA, Parser & AST, Análise Semântica, IR & SSA, Otimizações, CodeGen/JIT/GC |
 | 8 | 🌍 Sistemas Distribuídos | 6 | CAP & 8 Fallacies, Relógios Lógicos, Consenso Raft, CRDTs, Consistent Hashing, Kafka/Spanner/Dynamo |
 | 9 | 🧠 IA & LLMs | 8 | Redes Neurais, BPE, Embeddings, Positional Encoding, Transformer, Attention QKV, Treinamento, Sampling |
+| 10 | 💾 Estruturas de Dados & Algoritmos | 6 | Complexidade Big-O, Arrays & Linked Lists, Árvores BST/AVL & Heaps, Hash Tables & Grafos, Sorting, DP & Greedy |
+| 11 | 📐 Matemática para CS | 6 | Lógica & Provas, Conjuntos & Relações, Combinatória & Probabilidade, Teoria dos Grafos, Álgebra Linear, Teoria dos Números & RSA |
 
 <br>
 
@@ -59,7 +61,13 @@ src/
     ├── distributed/           # Slice: Sistemas Distribuídos
     │   ├── data.js
     │   └── canvas.js
-    └── ai/                    # Slice: IA & LLMs
+    ├── ai/                    # Slice: IA & LLMs
+    │   ├── data.js
+    │   └── canvas.js
+    ├── dsa/                   # Slice: Estruturas de Dados & Algoritmos
+    │   ├── data.js
+    │   └── canvas.js
+    └── math/                  # Slice: Matemática para CS
         ├── data.js
         └── canvas.js
 ```

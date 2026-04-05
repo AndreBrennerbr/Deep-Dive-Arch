@@ -34,6 +34,7 @@ const App = {
     const stepIdx = ref(0);
     const canvasRef = ref(null);
     let currentEngine = null;
+    const showModuleMenu = ref(false);
 
     const MODULES = {
       cpu: MOD_CPU,
@@ -46,6 +47,11 @@ const App = {
       dist: MOD_DIST,
       ai: MOD_AI
     };
+
+    const MODULE_ICONS = { cpu: '🖥️', os: '⚙️', net: '🌐', crypto: '🔐', db: '🗄️', conc: '🔄', comp: '🏗️', dist: '🌍', ai: '🧠' };
+    const currentModuleIcon = computed(() => MODULE_ICONS[activeTheme.value]);
+    const allModuleKeys = Object.keys(MODULES);
+    const getModuleIcon = (key) => MODULE_ICONS[key];
 
     const currentModule = computed(() => MODULES[activeTheme.value]);
     const currentStepData = computed(() => {
@@ -62,12 +68,14 @@ const App = {
     });
 
     const goHome = () => {
+      showModuleMenu.value = false;
       if(currentEngine && currentEngine.stop) currentEngine.stop();
       currentEngine = null;
       isHome.value = true;
     };
 
     const setTheme = (theme) => {
+      showModuleMenu.value = false;
       isHome.value = false;
       if(activeTheme.value !== theme) {
          activeTheme.value = theme;
@@ -127,7 +135,12 @@ const App = {
       isHome,
       activeTheme,
       stepIdx,
+      showModuleMenu,
       currentModule,
+      currentModuleIcon,
+      allModuleKeys,
+      getModuleIcon,
+      MODULES,
       currentStepData,
       isFirstStep,
       isLastStep,

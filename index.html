@@ -13,18 +13,30 @@
 <div id="app">
   <header class="app-header">
     <div class="brand" @click="goHome()" style="cursor:pointer">Deep<span>Dive</span> Architecture</div>
-    <div class="nav-tabs" v-if="!isHome">
-      <button :class="{ active: activeTheme === 'cpu' }" data-theme="cpu" @click="setTheme('cpu')">🖥️ 1. Arq. Computadores</button>
-      <button :class="{ active: activeTheme === 'os' }" data-theme="os" @click="setTheme('os')">⚙️ 2. Sist. Operacionais</button>
-      <button :class="{ active: activeTheme === 'net' }" data-theme="net" @click="setTheme('net')">🌐 3. Redes</button>
-      <button :class="{ active: activeTheme === 'crypto' }" data-theme="crypto" @click="setTheme('crypto')">🔐 4. Criptografia</button>
-      <button :class="{ active: activeTheme === 'db' }" data-theme="db" @click="setTheme('db')">🗄️ 5. Banco de Dados</button>
-      <button :class="{ active: activeTheme === 'conc' }" data-theme="conc" @click="setTheme('conc')">🔄 6. Concorrência</button>
-      <button :class="{ active: activeTheme === 'comp' }" data-theme="comp" @click="setTheme('comp')">🏗️ 7. Compiladores</button>
-      <button :class="{ active: activeTheme === 'dist' }" data-theme="dist" @click="setTheme('dist')">🌍 8. Distribuídos</button>
-      <button :class="{ active: activeTheme === 'ai' }" data-theme="ai" @click="setTheme('ai')">🧠 9. IA & LLMs</button>
+    <div class="header-actions" v-if="!isHome">
+      <div class="module-selector">
+        <button class="module-trigger" :class="['trigger-' + activeTheme]"
+                @click.stop="showModuleMenu = !showModuleMenu">
+          <span class="trigger-icon">{{ currentModuleIcon }}</span>
+          <span class="trigger-label">{{ currentModule?.title }}</span>
+          <span class="trigger-chevron" :class="{ open: showModuleMenu }">▾</span>
+        </button>
+        <transition name="dropdown">
+          <div class="module-dropdown" v-if="showModuleMenu">
+            <button v-for="key in allModuleKeys" :key="key"
+                    class="mod-item" :class="['mod-' + key, { active: activeTheme === key }]"
+                    @click="setTheme(key)">
+              <span class="mod-item-icon">{{ getModuleIcon(key) }}</span>
+              <span class="mod-item-name">{{ MODULES[key].title }}</span>
+            </button>
+          </div>
+        </transition>
+      </div>
+      <button class="home-btn" @click="goHome()" title="Voltar ao início">🏠 Home</button>
     </div>
   </header>
+
+  <div v-if="showModuleMenu" class="menu-backdrop" @click="showModuleMenu = false"></div>
 
   <!-- HOME PAGE -->
   <transition name="fade" mode="out-in">

@@ -16,6 +16,8 @@
   --color-comp: #f59e0b;
   --color-dist: #8b5cf6;
   --color-ai: #c084fc;
+  --color-dsa: #ec4899;
+  --color-math: #a3e635;
 
   --sidebar-w: 280px;
   --header-h: 70px;
@@ -116,6 +118,8 @@ body {
 .trigger-comp { border-left: 3px solid var(--color-comp); }
 .trigger-dist { border-left: 3px solid var(--color-dist); }
 .trigger-ai   { border-left: 3px solid var(--color-ai); }
+.trigger-dsa  { border-left: 3px solid var(--color-dsa); }
+.trigger-math { border-left: 3px solid var(--color-math); }
 
 /* MODULE DROPDOWN */
 .module-dropdown {
@@ -167,6 +171,8 @@ body {
 .mod-item.active.mod-comp { color: var(--color-comp); }
 .mod-item.active.mod-dist { color: var(--color-dist); }
 .mod-item.active.mod-ai   { color: var(--color-ai); }
+.mod-item.active.mod-dsa  { color: var(--color-dsa); }
+.mod-item.active.mod-math { color: var(--color-math); }
 
 .mod-item-icon { font-size: 1.1rem; flex-shrink: 0; }
 .mod-item-name { flex: 1; }
@@ -233,6 +239,8 @@ body {
 .sidebar.theme-comp h2 { color: var(--color-comp); }
 .sidebar.theme-dist h2 { color: var(--color-dist); }
 .sidebar.theme-ai h2 { color: var(--color-ai); }
+.sidebar.theme-dsa h2 { color: var(--color-dsa); }
+.sidebar.theme-math h2 { color: var(--color-math); }
 
 .sidebar ul { list-style: none; }
 
@@ -265,6 +273,8 @@ body {
 .sidebar.theme-comp li button.active { background: rgba(245, 158, 11, 0.1); color: var(--color-comp); border-left-color: var(--color-comp); }
 .sidebar.theme-dist li button.active { background: rgba(139, 92, 246, 0.1); color: var(--color-dist); border-left-color: var(--color-dist); }
 .sidebar.theme-ai li button.active { background: rgba(192, 132, 252, 0.1); color: var(--color-ai); border-left-color: var(--color-ai); }
+.sidebar.theme-dsa li button.active { background: rgba(236, 72, 153, 0.1); color: var(--color-dsa); border-left-color: var(--color-dsa); }
+.sidebar.theme-math li button.active { background: rgba(163, 230, 53, 0.1); color: var(--color-math); border-left-color: var(--color-math); }
 
 /* MAIN CONTENT */
 .app-main {
@@ -297,6 +307,8 @@ body {
 .diagram-container.theme-comp { border-color: rgba(245, 158, 11, 0.3); }
 .diagram-container.theme-dist { border-color: rgba(139, 92, 246, 0.3); }
 .diagram-container.theme-ai { border-color: rgba(192, 132, 252, 0.3); }
+.diagram-container.theme-dsa { border-color: rgba(236, 72, 153, 0.3); }
+.diagram-container.theme-math { border-color: rgba(163, 230, 53, 0.3); }
 
 canvas {
   width: 100%;
@@ -334,6 +346,8 @@ canvas {
 .theme-comp .btn-action { background: var(--color-comp); color: #050a15; }
 .theme-dist .btn-action { background: var(--color-dist); }
 .theme-ai .btn-action { background: var(--color-ai); }
+.theme-dsa .btn-action { background: var(--color-dsa); }
+.theme-math .btn-action { background: var(--color-math); color: #050a15; }
 .btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); }
 
 .status-badge {
@@ -353,6 +367,8 @@ canvas {
 .theme-comp .status-badge { color: var(--color-comp); border-color: rgba(245, 158, 11, 0.3); }
 .theme-dist .status-badge { color: var(--color-dist); border-color: rgba(139, 92, 246, 0.3); }
 .theme-ai .status-badge { color: var(--color-ai); border-color: rgba(192, 132, 252, 0.3); }
+.theme-dsa .status-badge { color: var(--color-dsa); border-color: rgba(236, 72, 153, 0.3); }
+.theme-math .status-badge { color: var(--color-math); border-color: rgba(163, 230, 53, 0.3); }
 
 /* CONTENT PANEL */
 .content-panel {
@@ -375,6 +391,8 @@ canvas {
 .theme-comp .content-panel { border-color: rgba(245, 158, 11, 0.2); }
 .theme-dist .content-panel { border-color: rgba(139, 92, 246, 0.2); }
 .theme-ai .content-panel { border-color: rgba(192, 132, 252, 0.2); }
+.theme-dsa .content-panel { border-color: rgba(236, 72, 153, 0.2); }
+.theme-math .content-panel { border-color: rgba(163, 230, 53, 0.2); }
 
 .content-panel h3 {
   font-size: 1.8rem;
@@ -393,6 +411,8 @@ canvas {
 .theme-comp h3 { color: var(--color-comp); }
 .theme-dist h3 { color: var(--color-dist); }
 .theme-ai h3 { color: var(--color-ai); }
+.theme-dsa h3 { color: var(--color-dsa); }
+.theme-math h3 { color: var(--color-math); }
 
 .content-area p { margin-bottom: 1.2rem; font-size: 1rem; color: #cbd5e1; }
 .content-area span.highlight { font-weight: bold; }
@@ -420,6 +440,8 @@ canvas {
 .theme-comp .code-block { border-left: 4px solid var(--color-comp); }
 .theme-dist .code-block { border-left: 4px solid var(--color-dist); }
 .theme-ai .code-block { border-left: 4px solid var(--color-ai); }
+.theme-dsa .code-block { border-left: 4px solid var(--color-dsa); }
+.theme-math .code-block { border-left: 4px solid var(--color-math); }
 
 .ref-list { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.85rem;}
 .ref-list strong { color: var(--text); }
@@ -520,6 +542,8 @@ canvas {
 .home-card.card-comp { border-color: rgba(245, 158, 11, 0.25); }
 .home-card.card-dist { border-color: rgba(139, 92, 246, 0.25); }
 .home-card.card-ai   { border-color: rgba(192, 132, 252, 0.25); }
+.home-card.card-dsa  { border-color: rgba(236, 72, 153, 0.25); }
+.home-card.card-math { border-color: rgba(163, 230, 53, 0.25); }
 
 .home-card.card-cpu:hover  { border-color: var(--color-cpu);  box-shadow: 0 12px 40px rgba(249, 115, 22, 0.15); }
 .home-card.card-os:hover   { border-color: var(--color-os);   box-shadow: 0 12px 40px rgba(250, 204, 21, 0.15); }
@@ -530,6 +554,8 @@ canvas {
 .home-card.card-comp:hover { border-color: var(--color-comp); box-shadow: 0 12px 40px rgba(245, 158, 11, 0.15); }
 .home-card.card-dist:hover { border-color: var(--color-dist); box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15); }
 .home-card.card-ai:hover   { border-color: var(--color-ai);   box-shadow: 0 12px 40px rgba(192, 132, 252, 0.15); }
+.home-card.card-dsa:hover  { border-color: var(--color-dsa);  box-shadow: 0 12px 40px rgba(236, 72, 153, 0.15); }
+.home-card.card-math:hover { border-color: var(--color-math); box-shadow: 0 12px 40px rgba(163, 230, 53, 0.15); }
 
 .card-icon {
   font-size: 2rem;
@@ -551,6 +577,8 @@ canvas {
 .card-comp h3 { color: var(--color-comp); }
 .card-dist h3 { color: var(--color-dist); }
 .card-ai   h3 { color: var(--color-ai); }
+.card-dsa  h3 { color: var(--color-dsa); }
+.card-math h3 { color: var(--color-math); }
 
 .home-card p {
   font-size: 0.9rem;

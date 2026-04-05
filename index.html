@@ -14,9 +14,11 @@
   <header class="app-header">
     <div class="brand" @click="goHome()" style="cursor:pointer">Deep<span>Dive</span> Architecture</div>
     <div class="nav-tabs" v-if="!isHome">
-      <button :class="{ active: activeTheme === 'net' }" data-theme="net" @click="setTheme('net')">🌐 1. Fundamentos Redes</button>
-      <button :class="{ active: activeTheme === 'node' }" data-theme="node" @click="setTheme('node')">⚙️ 2. Node.js Internals</button>
-      <button :class="{ active: activeTheme === 'ai' }" data-theme="ai" @click="setTheme('ai')">🧠 3. IA & LLMs</button>
+      <button :class="{ active: activeTheme === 'cpu' }" data-theme="cpu" @click="setTheme('cpu')">🖥️ 1. Arq. Computadores</button>
+      <button :class="{ active: activeTheme === 'os' }" data-theme="os" @click="setTheme('os')">⚙️ 2. Sistemas Operacionais</button>
+      <button :class="{ active: activeTheme === 'net' }" data-theme="net" @click="setTheme('net')">🌐 3. Redes</button>
+      <button :class="{ active: activeTheme === 'crypto' }" data-theme="crypto" @click="setTheme('crypto')">🔐 4. Criptografia</button>
+      <button :class="{ active: activeTheme === 'ai' }" data-theme="ai" @click="setTheme('ai')">🧠 5. IA & LLMs</button>
     </div>
   </header>
 
@@ -32,17 +34,29 @@
     </section>
 
     <section class="home-cards">
+      <div class="home-card card-cpu" @click="setTheme('cpu')">
+        <div class="card-icon">🖥️</div>
+        <h3>Arquitetura de Computadores</h3>
+        <p>Von Neumann, Registradores & ISA, Cache L1/L2/L3, Pipeline & Branch Prediction, GPU vs CPU e Memória Virtual.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-os" @click="setTheme('os')">
+        <div class="card-icon">⚙️</div>
+        <h3>Sistemas Operacionais</h3>
+        <p>Processos & PCB, CPU Scheduling (CFS), Threads & Concorrência, Memória & Paginação, Syscalls & I/O, File Systems.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
       <div class="home-card card-net" @click="setTheme('net')">
         <div class="card-icon">🌐</div>
         <h3>Fundamentos de Redes</h3>
         <p>OSI, TCP/IP, DNS, Handshake, UDP/QUIC e TLS 1.3 — cada camada explicada com diagramas de encapsulamento e animações de pacotes.</p>
         <span class="card-steps">6 steps</span>
       </div>
-      <div class="home-card card-node" @click="setTheme('node')">
-        <div class="card-icon">⚙️</div>
-        <h3>Node.js Internals</h3>
-        <p>Da syscall socket() ao res.end() — epoll, Event Loop, V8 Bindings, Thread Pool, Buffers, llhttp e Streams por dentro.</p>
-        <span class="card-steps">7 steps</span>
+      <div class="home-card card-crypto" @click="setTheme('crypto')">
+        <div class="card-icon">🔐</div>
+        <h3>Criptografia & Segurança</h3>
+        <p>Hashing SHA-256, AES & modos de operação, RSA vs ECC, Diffie-Hellman/ECDHE, Certificados X.509 e TLS 1.3 deep dive.</p>
+        <span class="card-steps">6 steps</span>
       </div>
       <div class="home-card card-ai" @click="setTheme('ai')">
         <div class="card-icon">🧠</div>

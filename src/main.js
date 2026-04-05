@@ -11,6 +11,7 @@ const { createApp, ref, computed, watch, nextTick, onMounted } = Vue;
 
 const App = {
   setup() {
+    const isHome = ref(true);
     const activeTheme = ref('net');
     const stepIdx = ref(0);
     const canvasRef = ref(null);
@@ -36,7 +37,14 @@ const App = {
        return stepIdx.value === currentModule.value.steps.length - 1;
     });
 
+    const goHome = () => {
+      if(currentEngine && currentEngine.stop) currentEngine.stop();
+      currentEngine = null;
+      isHome.value = true;
+    };
+
     const setTheme = (theme) => {
+      isHome.value = false;
       if(activeTheme.value !== theme) {
          activeTheme.value = theme;
          stepIdx.value = 0;
@@ -57,11 +65,16 @@ const App = {
 
     // Watchers para redesenhar
     watch([activeTheme, stepIdx], () => {
-       nextTick(bootstrapCanvas);
+       if(!isHome.value) nextTick(bootstrapCanvas);
+    });
+
+    // Quando o canvas entra no DOM (após transition out-in), bootstrap
+    watch(canvasRef, (cvs) => {
+       if(cvs && !isHome.value) nextTick(bootstrapCanvas);
     });
 
     onMounted(() => {
-       bootstrapCanvas();
+       // Começa na home, sem canvas
     });
 
     const bootstrapCanvas = () => {
@@ -81,12 +94,14 @@ const App = {
     };
 
     return {
+      isHome,
       activeTheme,
       stepIdx,
       currentModule,
       currentStepData,
       isFirstStep,
       isLastStep,
+      goHome,
       setTheme,
       setStep,
       nextStep,

@@ -12,15 +12,75 @@
 
 <div id="app">
   <header class="app-header">
-    <div class="brand">Deep<span>Dive</span> Architecture</div>
-    <div class="nav-tabs">
+    <div class="brand" @click="goHome()" style="cursor:pointer">Deep<span>Dive</span> Architecture</div>
+    <div class="nav-tabs" v-if="!isHome">
       <button :class="{ active: activeTheme === 'net' }" data-theme="net" @click="setTheme('net')">🌐 1. Fundamentos Redes</button>
       <button :class="{ active: activeTheme === 'node' }" data-theme="node" @click="setTheme('node')">⚙️ 2. Node.js Internals</button>
       <button :class="{ active: activeTheme === 'ai' }" data-theme="ai" @click="setTheme('ai')">🧠 3. IA & LLMs</button>
     </div>
   </header>
 
-  <div class="content-wrapper">
+  <!-- HOME PAGE -->
+  <transition name="fade" mode="out-in">
+  <main v-if="isHome" class="home" key="home">
+    <section class="hero">
+      <h1>Deep<span>Dive</span> Architecture</h1>
+      <p class="hero-sub">Estudo técnico aprofundado, do jeito que deveria ser.</p>
+      <p class="hero-desc">Chega de explicações superficiais. Cada tema é dissecado com <strong>diagramas animados</strong>, 
+        <strong>referências primárias</strong> (RFCs, papers, código-fonte) e conteúdo que não pula detalhes — 
+        do byte no fio ao token no Transformer.</p>
+    </section>
+
+    <section class="home-cards">
+      <div class="home-card card-net" @click="setTheme('net')">
+        <div class="card-icon">🌐</div>
+        <h3>Fundamentos de Redes</h3>
+        <p>OSI, TCP/IP, DNS, Handshake, UDP/QUIC e TLS 1.3 — cada camada explicada com diagramas de encapsulamento e animações de pacotes.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-node" @click="setTheme('node')">
+        <div class="card-icon">⚙️</div>
+        <h3>Node.js Internals</h3>
+        <p>Da syscall socket() ao res.end() — epoll, Event Loop, V8 Bindings, Thread Pool, Buffers, llhttp e Streams por dentro.</p>
+        <span class="card-steps">7 steps</span>
+      </div>
+      <div class="home-card card-ai" @click="setTheme('ai')">
+        <div class="card-icon">🧠</div>
+        <h3>IA & LLMs</h3>
+        <p>Redes Neurais, Tokenização BPE, Embeddings, Positional Encoding, Transformer, Attention QKV, Treinamento e Sampling.</p>
+        <span class="card-steps">8 steps</span>
+      </div>
+    </section>
+
+    <section class="home-philosophy">
+      <h2>Por que este projeto existe?</h2>
+      <div class="philosophy-grid">
+        <div class="philosophy-item">
+          <span class="phi-icon">📐</span>
+          <h4>Diagramas, não parágrafos</h4>
+          <p>Conceitos complexos ficam claros quando você vê o dado se movendo. Cada step tem uma visualização Canvas 2D interativa.</p>
+        </div>
+        <div class="philosophy-item">
+          <span class="phi-icon">🔬</span>
+          <h4>Profundidade real</h4>
+          <p>Sem "é tipo um envelope". Você vai ver o header TCP com seus 20 bytes, o Scaled Dot-Product com a fórmula, o epoll_wait com os flags.</p>
+        </div>
+        <div class="philosophy-item">
+          <span class="phi-icon">📎</span>
+          <h4>Referências primárias</h4>
+          <p>Cada step aponta para a RFC, o paper original, o código-fonte no GitHub ou a documentação oficial. Nada de "fonte: trust me bro".</p>
+        </div>
+        <div class="philosophy-item">
+          <span class="phi-icon">🧩</span>
+          <h4>Modular por design</h4>
+          <p>Novos slices podem ser adicionados a qualquer momento. Cada tema é independente — com seus próprios dados e visualizações.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SLICE VIEW -->
+  <div v-else class="content-wrapper" key="slice">
     <!-- SIDEBAR DE PASSOS -->
     <aside class="sidebar" :class="['theme-' + activeTheme]">
       <transition name="fade" mode="out-in">
@@ -66,6 +126,7 @@
       </div>
     </main>
   </div>
+  </transition>
 </div>
 
 <script type="module" src="./src/main.js"></script>

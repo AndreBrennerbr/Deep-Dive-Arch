@@ -253,9 +253,12 @@ canvas {
   padding: 1.5rem;
   margin: 1.5rem 0;
   font-family: 'Consolas', 'Fira Code', monospace;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
   overflow-x: auto;
   position: relative;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .theme-net .code-block { border-left: 4px solid var(--color-net); }
@@ -271,6 +274,160 @@ canvas {
 .fade-enter-active, .fade-leave-active { transition: opacity 0.3s; }
 .fade-enter-from, .fade-leave-to { opacity: 0; }
 
+/* ================================ */
+/*           HOME PAGE              */
+/* ================================ */
+.home {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 2rem 4rem;
+}
+
+.hero {
+  text-align: center;
+  max-width: 720px;
+  margin-bottom: 3.5rem;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 0.8rem;
+}
+
+.hero h1 span { color: var(--color-net); }
+
+.hero-sub {
+  font-size: 1.25rem;
+  color: var(--subtext);
+  margin-bottom: 1.2rem;
+}
+
+.hero-desc {
+  font-size: 1rem;
+  color: #94a3b8;
+  line-height: 1.8;
+}
+
+.hero-desc strong { color: var(--text); }
+
+/* CARDS */
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  width: 100%;
+  margin-bottom: 3.5rem;
+}
+
+.home-card {
+  background: var(--panel-bg);
+  border: 1px solid #1e293b;
+  border-radius: 1.2rem;
+  padding: 2rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+
+.home-card.card-net  { border-color: rgba(59, 130, 246, 0.25); }
+.home-card.card-node { border-color: rgba(74, 222, 128, 0.25); }
+.home-card.card-ai   { border-color: rgba(192, 132, 252, 0.25); }
+
+.home-card.card-net:hover  { border-color: var(--color-net);  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15); }
+.home-card.card-node:hover { border-color: var(--color-node); box-shadow: 0 12px 40px rgba(74, 222, 128, 0.15); }
+.home-card.card-ai:hover   { border-color: var(--color-ai);   box-shadow: 0 12px 40px rgba(192, 132, 252, 0.15); }
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+}
+
+.home-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+  font-weight: 700;
+}
+
+.card-net  h3 { color: var(--color-net); }
+.card-node h3 { color: var(--color-node); }
+.card-ai   h3 { color: var(--color-ai); }
+
+.home-card p {
+  font-size: 0.9rem;
+  color: var(--subtext);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.card-steps {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  color: var(--subtext);
+  font-weight: 600;
+}
+
+/* PHILOSOPHY */
+.home-philosophy {
+  max-width: 900px;
+  width: 100%;
+}
+
+.home-philosophy h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+}
+
+.philosophy-item {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.phi-icon {
+  font-size: 1.6rem;
+  display: block;
+  margin-bottom: 0.6rem;
+}
+
+.philosophy-item h4 {
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.philosophy-item p {
+  font-size: 0.85rem;
+  color: var(--subtext);
+  line-height: 1.6;
+}
+
 /* RESPONSIVE */
 @media (max-width: 900px) {
   .content-wrapper { flex-direction: column; }
@@ -279,4 +436,6 @@ canvas {
   .sidebar li { flex-shrink: 0; }
   .app-header { flex-direction: column; height: auto; padding: 1rem; gap: 1rem; }
   .nav-tabs { flex-wrap: wrap; justify-content: center; }
+  .hero h1 { font-size: 2rem; }
+  .home { padding: 2rem 1rem; }
 }

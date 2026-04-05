@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Dive: Redes, Node.js & IA</title>
+  
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="./src/shared/ui/styles.css">
+</head>
+<body>
+
+<div id="app">
+  <header class="app-header">
+    <div class="brand">🚀 Deep Dive <span>Tech</span></div>
+    <div class="nav-tabs">
+      <button :class="{ active: activeTheme === 'net' }" data-theme="net" @click="setTheme('net')">🌐 1. Fundamentos Redes</button>
+      <button :class="{ active: activeTheme === 'node' }" data-theme="node" @click="setTheme('node')">⚙️ 2. Node.js Internals</button>
+      <button :class="{ active: activeTheme === 'ai' }" data-theme="ai" @click="setTheme('ai')">🧠 3. IA & LLMs</button>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <!-- SIDEBAR DE PASSOS -->
+    <aside class="sidebar" :class="['theme-' + activeTheme]">
+      <transition name="fade" mode="out-in">
+        <div :key="activeTheme">
+            <h2>{{ currentModule?.title }}</h2>
+            <ul>
+              <li v-for="(step, idx) in currentModule?.steps" :key="idx">
+                <button :class="{ active: stepIdx === idx }" @click="setStep(idx)">
+                  {{ step.short }}
+                </button>
+              </li>
+            </ul>
+        </div>
+      </transition>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="app-main">
+      <div class="diagram-container" :class="['theme-' + activeTheme]">
+        <canvas ref="canvasRef" width="900" height="400"></canvas>
+        
+        <div class="controls">
+          <button class="btn-action" v-if="!isFirstStep" @click="prevStep()">⏮ Anterior</button>
+          <div class="status-badge">Passo {{ stepIdx + 1 }} de {{ currentModule?.steps?.length }}</div>
+          <button class="btn-action" v-if="!isLastStep" @click="nextStep()">Próximo Passo ⏭</button>
+        </div>
+      </div>
+
+      <div class="content-panel" :class="['theme-' + activeTheme]">
+        <transition name="fade" mode="out-in">
+          <div v-if="currentStepData" :key="activeTheme + '-' + stepIdx" class="content-area">
+            <h3>{{ currentStepData.title }}</h3>
+            <div v-html="currentStepData.content"></div>
+            
+            <div class="ref-list" v-if="currentStepData.refs && currentStepData.refs.length > 0">
+              <strong>Referências Téc:</strong>
+              <template v-for="(lim, index) in currentStepData.refs">
+                 <a :href="lim.url" target="_blank">{{ lim.text }}</a><span v-if="index < currentStepData.refs.length - 1">, </span>
+              </template>
+            </div>
+          </div>
+        </transition>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

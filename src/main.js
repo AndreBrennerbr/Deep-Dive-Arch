@@ -1,8 +1,20 @@
+import { MOD_MATH } from './slices/math/data.js';
+import { renderMath } from './slices/math/canvas.js';
+
+import { MOD_DSA } from './slices/dsa/data.js';
+import { renderDSA } from './slices/dsa/canvas.js';
+
 import { MOD_CPU } from './slices/cpu/data.js';
 import { renderCPU } from './slices/cpu/canvas.js';
 
 import { MOD_OS } from './slices/os/data.js';
 import { renderOS } from './slices/os/canvas.js';
+
+import { MOD_CONC } from './slices/concurrency/data.js';
+import { renderConcurrency } from './slices/concurrency/canvas.js';
+
+import { MOD_COMP } from './slices/compilers/data.js';
+import { renderCompilers } from './slices/compilers/canvas.js';
 
 import { MOD_NETWORKS } from './slices/networks/data.js';
 import { renderNetwork } from './slices/networks/canvas.js';
@@ -13,50 +25,38 @@ import { renderCrypto } from './slices/crypto/canvas.js';
 import { MOD_DB } from './slices/db/data.js';
 import { renderDB } from './slices/db/canvas.js';
 
-import { MOD_CONC } from './slices/concurrency/data.js';
-import { renderConcurrency } from './slices/concurrency/canvas.js';
-
-import { MOD_COMP } from './slices/compilers/data.js';
-import { renderCompilers } from './slices/compilers/canvas.js';
-
 import { MOD_DIST } from './slices/distributed/data.js';
 import { renderDistributed } from './slices/distributed/canvas.js';
 
 import { MOD_AI } from './slices/ai/data.js';
 import { renderAI } from './slices/ai/canvas.js';
 
-import { MOD_DSA } from './slices/dsa/data.js';
-import { renderDSA } from './slices/dsa/canvas.js';
-
-import { MOD_MATH } from './slices/math/data.js';
-import { renderMath } from './slices/math/canvas.js';
-
 const { createApp, ref, computed, watch, nextTick, onMounted } = Vue;
 
 const App = {
   setup() {
     const isHome = ref(true);
-    const activeTheme = ref('cpu');
+    const activeTheme = ref('math');
     const stepIdx = ref(0);
     const canvasRef = ref(null);
     let currentEngine = null;
     const showModuleMenu = ref(false);
 
     const MODULES = {
+      math: MOD_MATH,
+      dsa: MOD_DSA,
       cpu: MOD_CPU,
       os: MOD_OS,
+      conc: MOD_CONC,
+      comp: MOD_COMP,
       net: MOD_NETWORKS,
       crypto: MOD_CRYPTO,
       db: MOD_DB,
-      conc: MOD_CONC,
-      comp: MOD_COMP,
       dist: MOD_DIST,
-      ai: MOD_AI,
-      dsa: MOD_DSA,
-      math: MOD_MATH
+      ai: MOD_AI
     };
 
-    const MODULE_ICONS = { cpu: '🖥️', os: '⚙️', net: '🌐', crypto: '🔐', db: '🗄️', conc: '🔄', comp: '🏗️', dist: '🌍', ai: '🧠', dsa: '💾', math: '📐' };
+    const MODULE_ICONS = { math: '📐', dsa: '💾', cpu: '🖥️', os: '⚙️', conc: '🔄', comp: '🏗️', net: '🌐', crypto: '🔐', db: '🗄️', dist: '🌍', ai: '🧠' };
     const currentModuleIcon = computed(() => MODULE_ICONS[activeTheme.value]);
     const allModuleKeys = Object.keys(MODULES);
     const getModuleIcon = (key) => MODULE_ICONS[key];
@@ -124,17 +124,17 @@ const App = {
       // Cleanup previous engine loop
       if(currentEngine && currentEngine.stop) currentEngine.stop();
       
-      if(activeTheme.value === 'cpu') currentEngine = renderCPU(cvs);
+      if(activeTheme.value === 'math') currentEngine = renderMath(cvs);
+      else if(activeTheme.value === 'dsa') currentEngine = renderDSA(cvs);
+      else if(activeTheme.value === 'cpu') currentEngine = renderCPU(cvs);
       else if(activeTheme.value === 'os') currentEngine = renderOS(cvs);
+      else if(activeTheme.value === 'conc') currentEngine = renderConcurrency(cvs);
+      else if(activeTheme.value === 'comp') currentEngine = renderCompilers(cvs);
       else if(activeTheme.value === 'net') currentEngine = renderNetwork(cvs);
       else if(activeTheme.value === 'crypto') currentEngine = renderCrypto(cvs);
       else if(activeTheme.value === 'db') currentEngine = renderDB(cvs);
-      else if(activeTheme.value === 'conc') currentEngine = renderConcurrency(cvs);
-      else if(activeTheme.value === 'comp') currentEngine = renderCompilers(cvs);
       else if(activeTheme.value === 'dist') currentEngine = renderDistributed(cvs);
       else if(activeTheme.value === 'ai') currentEngine = renderAI(cvs);
-      else if(activeTheme.value === 'dsa') currentEngine = renderDSA(cvs);
-      else if(activeTheme.value === 'math') currentEngine = renderMath(cvs);
 
       if(currentEngine && currentEngine.drawStep) {
          currentEngine.drawStep(stepIdx.value);

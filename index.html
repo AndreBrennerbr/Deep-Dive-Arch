@@ -52,6 +52,18 @@
     </section>
 
     <section class="home-cards">
+      <div class="home-card card-math" @click="setTheme('math')">
+        <div class="card-icon">📐</div>
+        <h3>Matemática para CS</h3>
+        <p>Lógica & Provas, Conjuntos & Relações, Combinatória & Probabilidade, Teoria dos Grafos, Álgebra Linear, Teoria dos Números & RSA.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-dsa" @click="setTheme('dsa')">
+        <div class="card-icon">💾</div>
+        <h3>Estruturas de Dados & Algoritmos</h3>
+        <p>Complexidade Big-O, Arrays & Linked Lists, Árvores BST/AVL & Heaps, Hash Tables & Grafos, Sorting, DP & Greedy.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
       <div class="home-card card-cpu" @click="setTheme('cpu')">
         <div class="card-icon">🖥️</div>
         <h3>Arquitetura de Computadores</h3>
@@ -62,6 +74,18 @@
         <div class="card-icon">⚙️</div>
         <h3>Sistemas Operacionais</h3>
         <p>Processos & PCB, CPU Scheduling (CFS), Threads & Concorrência, Memória & Paginação, Syscalls & I/O, File Systems.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-conc" @click="setTheme('conc')">
+        <div class="card-icon">🔄</div>
+        <h3>Concorrência & Paralelismo</h3>
+        <p>Amdahl's Law, Memory Models & Ordering, Lock-Free CAS & Treiber Stack, Actor Model & CSP, MESI Cache Coherence, Async/Await & Coroutines.</p>
+        <span class="card-steps">6 steps</span>
+      </div>
+      <div class="home-card card-comp" @click="setTheme('comp')">
+        <div class="card-icon">🏗️</div>
+        <h3>Compiladores & Interpretadores</h3>
+        <p>Lexer & DFA, Parser & AST, Análise Semântica & Types, IR & SSA, Otimizações, CodeGen, JIT & Garbage Collection.</p>
         <span class="card-steps">6 steps</span>
       </div>
       <div class="home-card card-net" @click="setTheme('net')">
@@ -82,18 +106,6 @@
         <p>Storage Engines B-Tree vs LSM, Indexação B+Tree/Hash/GIN, Query Processing & CBO, Transações ACID & MVCC, Buffer Pool e Replicação.</p>
         <span class="card-steps">6 steps</span>
       </div>
-      <div class="home-card card-conc" @click="setTheme('conc')">
-        <div class="card-icon">🔄</div>
-        <h3>Concorrência & Paralelismo</h3>
-        <p>Amdahl's Law, Memory Models & Ordering, Lock-Free CAS & Treiber Stack, Actor Model & CSP, MESI Cache Coherence, Async/Await & Coroutines.</p>
-        <span class="card-steps">6 steps</span>
-      </div>
-      <div class="home-card card-comp" @click="setTheme('comp')">
-        <div class="card-icon">🏗️</div>
-        <h3>Compiladores & Interpretadores</h3>
-        <p>Lexer & DFA, Parser & AST, Análise Semântica & Types, IR & SSA, Otimizações, CodeGen, JIT & Garbage Collection.</p>
-        <span class="card-steps">6 steps</span>
-      </div>
       <div class="home-card card-dist" @click="setTheme('dist')">
         <div class="card-icon">🌍</div>
         <h3>Sistemas Distribuídos</h3>
@@ -105,18 +117,6 @@
         <h3>IA & LLMs</h3>
         <p>Redes Neurais, Tokenização BPE, Embeddings, Positional Encoding, Transformer, Attention QKV, Treinamento e Sampling.</p>
         <span class="card-steps">8 steps</span>
-      </div>
-      <div class="home-card card-dsa" @click="setTheme('dsa')">
-        <div class="card-icon">💾</div>
-        <h3>Estruturas de Dados & Algoritmos</h3>
-        <p>Complexidade Big-O, Arrays & Linked Lists, Árvores BST/AVL & Heaps, Hash Tables & Grafos, Sorting, DP & Greedy.</p>
-        <span class="card-steps">6 steps</span>
-      </div>
-      <div class="home-card card-math" @click="setTheme('math')">
-        <div class="card-icon">📐</div>
-        <h3>Matemática para CS</h3>
-        <p>Lógica & Provas, Conjuntos & Relações, Combinatória & Probabilidade, Teoria dos Grafos, Álgebra Linear, Teoria dos Números & RSA.</p>
-        <span class="card-steps">6 steps</span>
       </div>
     </section>
 

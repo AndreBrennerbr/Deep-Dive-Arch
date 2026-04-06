@@ -4,31 +4,32 @@ Plataforma interativa de estudo técnico aprofundado sobre **fundamentos de comp
 
 ### 🗺️ Roadmap de Aprendizado
 
-Os slices formam um currículo coerente, do hardware até a inteligência artificial:
+Os slices formam um currículo coerente, dos fundamentos matemáticos até a inteligência artificial:
 
 | # | Slice | Steps | Destaques |
 |---|-------|-------|-----------|
-| 1 | 🖥️ Arquitetura de Computadores | 6 | Von Neumann, Registradores & ISA, Cache L1/L2/L3, Pipeline & Branch Prediction, GPU vs CPU/SIMD, Memória Virtual |
-| 2 | ⚙️ Sistemas Operacionais | 6 | Processos & PCB, CPU Scheduling (CFS), Threads & Concorrência, Memória & Paginação, Syscalls & I/O, File Systems |
-| 3 | 🌐 Fundamentos de Redes | 6 | OSI/TCP-IP, Encapsulamento, DNS, TCP Handshake, UDP/QUIC, TLS 1.3 |
-| 4 | 🔐 Criptografia & Segurança | 6 | Hashing SHA-256, AES & Modos de Operação, RSA vs ECC, Diffie-Hellman/ECDHE, Certificados X.509/PKI, TLS 1.3 Deep Dive |
-| 5 | 🗄️ Banco de Dados Internals | 6 | Storage Engines B-Tree vs LSM, Indexação B+Tree/Hash/GIN, Query Processing & CBO, Transações ACID & MVCC, Buffer Pool, Replicação |
-| 6 | 🔄 Concorrência & Paralelismo | 6 | Amdahl's Law, Memory Models, Lock-Free CAS, Actor/CSP, MESI Cache Coherence, Async/Await & Coroutines |
-| 7 | 🏗️ Compiladores & Interpretadores | 6 | Lexer & DFA, Parser & AST, Análise Semântica, IR & SSA, Otimizações, CodeGen/JIT/GC |
-| 8 | 🌍 Sistemas Distribuídos | 6 | CAP & 8 Fallacies, Relógios Lógicos, Consenso Raft, CRDTs, Consistent Hashing, Kafka/Spanner/Dynamo |
-| 9 | 🧠 IA & LLMs | 8 | Redes Neurais, BPE, Embeddings, Positional Encoding, Transformer, Attention QKV, Treinamento, Sampling |
-| 10 | 💾 Estruturas de Dados & Algoritmos | 6 | Complexidade Big-O, Arrays & Linked Lists, Árvores BST/AVL & Heaps, Hash Tables & Grafos, Sorting, DP & Greedy |
-| 11 | 📐 Matemática para CS | 6 | Lógica & Provas, Conjuntos & Relações, Combinatória & Probabilidade, Teoria dos Grafos, Álgebra Linear, Teoria dos Números & RSA |
+| 1 | 📐 Matemática para CS | 6 | Lógica & Provas, Conjuntos & Relações, Combinatória & Probabilidade, Teoria dos Grafos, Álgebra Linear, Teoria dos Números & RSA |
+| 2 | 💾 Estruturas de Dados & Algoritmos | 6 | Complexidade Big-O, Arrays & Linked Lists, Árvores BST/AVL & Heaps, Hash Tables & Grafos, Sorting, DP & Greedy |
+| 3 | 🖥️ Arquitetura de Computadores | 6 | Von Neumann, Registradores & ISA, Cache L1/L2/L3, Pipeline & Branch Prediction, GPU vs CPU/SIMD, Memória Virtual |
+| 4 | ⚙️ Sistemas Operacionais | 6 | Processos & PCB, CPU Scheduling (CFS), Threads & Concorrência, Memória & Paginação, Syscalls & I/O, File Systems |
+| 5 | 🔄 Concorrência & Paralelismo | 6 | Amdahl's Law, Memory Models, Lock-Free CAS, Actor/CSP, MESI Cache Coherence, Async/Await & Coroutines |
+| 6 | 🏗️ Compiladores & Interpretadores | 6 | Lexer & DFA, Parser & AST, Análise Semântica, IR & SSA, Otimizações, CodeGen/JIT/GC |
+| 7 | 🌐 Fundamentos de Redes | 6 | OSI/TCP-IP, Encapsulamento, DNS, TCP Handshake, UDP/QUIC, TLS 1.3 |
+| 8 | 🔐 Criptografia & Segurança | 6 | Hashing SHA-256, AES & Modos de Operação, RSA vs ECC, Diffie-Hellman/ECDHE, Certificados X.509/PKI, TLS 1.3 Deep Dive |
+| 9 | 🗄️ Banco de Dados Internals | 6 | Storage Engines B-Tree vs LSM, Indexação B+Tree/Hash/GIN, Query Processing & CBO, Transações ACID & MVCC, Buffer Pool, Replicação |
+| 10 | 🌍 Sistemas Distribuídos | 6 | CAP & 8 Fallacies, Relógios Lógicos, Consenso Raft, CRDTs, Consistent Hashing, Kafka/Spanner/Dynamo |
+| 11 | 🧠 IA & LLMs | 8 | Redes Neurais, BPE, Embeddings, Positional Encoding, Transformer, Attention QKV, Treinamento, Sampling |
 
 <br>
 
 ## 📐 Arquitetura
 
-Cada slice é isolado em sua própria pasta com dois arquivos:
-- **`data.js`** — conteúdo textual, referências e metadados dos steps
+Cada slice é isolado em sua própria pasta com três arquivos:
+- **`data.js`** — metadados dos steps (título, referências) e import do conteúdo
+- **`content.js`** — conteúdo HTML de cada step em template literals legíveis
 - **`canvas.js`** — visualizações e animações Canvas 2D do slice
 
-Para adicionar um novo slice basta criar a pasta em `src/slices/<nome>/`, exportar os dois arquivos e registrá-lo em `main.js`.
+Para adicionar um novo slice basta criar a pasta em `src/slices/<nome>/`, exportar os três arquivos e registrá-lo em `main.js`.
 
 ```
 src/
@@ -37,38 +38,49 @@ src/
 │   ├── lib/engine.js          # BaseRenderer (Canvas 2D)
 │   └── ui/styles.css          # Tema dark, layout responsivo
 └── slices/
-    ├── cpu/                   # Slice: Arquitetura de Computadores
+    ├── math/                  # 1. Matemática para CS
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── os/                    # Slice: Sistemas Operacionais
+    ├── dsa/                   # 2. Estruturas de Dados & Algoritmos
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── networks/              # Slice: Fundamentos de Redes
+    ├── cpu/                   # 3. Arquitetura de Computadores
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── crypto/                # Slice: Criptografia & Segurança
+    ├── os/                    # 4. Sistemas Operacionais
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── db/                    # Slice: Banco de Dados Internals
+    ├── concurrency/           # 5. Concorrência & Paralelismo
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── concurrency/           # Slice: Concorrência & Paralelismo
+    ├── compilers/             # 6. Compiladores & Interpretadores
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── compilers/             # Slice: Compiladores & Interpretadores
+    ├── networks/              # 7. Fundamentos de Redes
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── distributed/           # Slice: Sistemas Distribuídos
+    ├── crypto/                # 8. Criptografia & Segurança
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── ai/                    # Slice: IA & LLMs
+    ├── db/                    # 9. Banco de Dados Internals
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    ├── dsa/                   # Slice: Estruturas de Dados & Algoritmos
+    ├── distributed/           # 10. Sistemas Distribuídos
     │   ├── data.js
+    │   ├── content.js
     │   └── canvas.js
-    └── math/                  # Slice: Matemática para CS
+    └── ai/                    # 11. IA & LLMs
         ├── data.js
+        ├── content.js
         └── canvas.js
 ```
 

@@ -1,0 +1,215 @@
+const STEP_1 =
+`<p>Toda inteligência artificial moderna é, na essência, uma sequência colossal de operações de <strong>Álgebra Linear</strong>. Não existe mágica, não existem "IF/ELSE" complexos — apenas multiplicações de matrizes executadas bilhões de vezes por segundo em GPUs massivamente paralelas.</p>
+<p>Um neurônio artificial implementa a equação canônica <span class="highlight">Y = W · X + b</span>, onde cada componente tem um papel preciso:</p>
+<ul><li><code>X</code> — <strong>Vetor de entrada (Input)</strong>: os dados numéricos recebidos de neurônios anteriores ou da camada de input. Ex: um pixel de imagem, um embedding de token, etc.</li><li><code>W</code> — <strong>Pesos (Weights)</strong>: a matriz de parâmetros que o modelo <em>aprende</em> durante o treinamento. Cada peso define a importância relativa de cada conexão. Um modelo como o GPT-4 possui centenas de bilhões desses valores.</li><li><code>b</code> — <strong>Viés (Bias)</strong>: permite que o neurônio desloque sua função de ativação, ajustando o limiar de decisão independentemente dos inputs.</li></ul>
+<p>O resultado dessa multiplicação é puramente linear. Empilhar camadas lineares seria inútil (equivale a uma única transformação linear). Por isso o output passa obrigatoriamente por <strong>Funções de Ativação</strong> não-lineares que introduzem a capacidade real de aprendizado:</p>
+<ul><li><strong>ReLU</strong> — <code>f(x) = max(0, x)</code>: Zera valores negativos. Simples, rápida e evita o problema do Vanishing Gradient. Padrão em redes convolucionais (CNNs).</li><li><strong>SiLU / Swish</strong> — <code>f(x) = x · σ(x)</code>: Usada nos LLMs modernos (LLaMA, Mistral). Suave e diferenciável em todos os pontos, permite gradientes mais estáveis.</li><li><strong>GELU</strong> — Gaussian Error Linear Unit: Preferida nos Transformers originais (BERT, GPT). Aplica uma "porta probabilística" baseada na distribuição gaussiana cumulativa.</li></ul>
+<p>O aprendizado acontece via <strong>Backpropagation</strong>: após o <em>Forward Pass</em> (propagação direta), calcula-se o erro (<em>Loss</em>) entre a previsão e o resultado esperado. O algoritmo então calcula o <em>gradiente</em> da Loss em relação a cada peso usando a <strong>Regra da Cadeia</strong> do Cálculo Diferencial, propagando ajustes de trás para frente. O otimizador (tipicamente <strong>Adam</strong>) atualiza os pesos na direção que minimiza o erro:</p>
+<div class="code-block">Forward:  Z = W · X + b  →  A = Activation(Z)
+Loss:     L = -Σ yᵢ·log(ŷᵢ)          (Cross-Entropy Loss)
+Backward: ∂L/∂W = ∂L/∂A · ∂A/∂Z · X   (Regra da Cadeia)
+Update:   W ← W - α · ∂L/∂W           (α = Learning Rate)
+
+Computational Graph (Backprop em ação):
+
+  X ──→ [×W₁] ──→ [+b] ──→ [ReLU] ──→ [×W₂] ──→ [Softmax] ──→ L
+                                                                │
+  ←── ∂L/∂W₁ ←── ∂/∂b ←── ∂A/∂Z ←── ∂L/∂W₂ ←──── ∂L/∂ŷ ←────┘
+  (gradientes fluem de trás para frente pela regra da cadeia)
+
+Problemas de Gradiente:
+  Vanishing: ∂L/∂W → 0 em redes profundas (sigmoid/tanh)
+    → Soluções: ReLU, ResNets (skip connections), LayerNorm
+  Exploding: ∂L/∂W → ∞ (instabilidade numérica)
+    → Solução: Gradient Clipping — max_norm(∇, threshold=1.0)
+
+Adam Optimizer (mais usado na prática):
+  Combina Momentum + RMSProp:
+  m_t = β₁·m_{t-1} + (1-β₁)·∇     (1º momento — direção)
+  v_t = β₂·v_{t-1} + (1-β₂)·∇²    (2º momento — magnitude)
+  W_t = W_{t-1} - α · m̂_t / (√v̂_t + ε)
+  → Learning rate adaptativo POR PARÂMETRO
+  → β₁=0.9, β₂=0.999, ε=1e-8 (defaults quase universais)</div>
+<p>Uma <strong>GPU</strong> (como as NVIDIA A100/H100) é essencial porque cada núcleo CUDA executa uma multiplicação de matriz em paralelo. Enquanto uma CPU processa operações sequencialmente, uma GPU com milhares de núcleos executa toda a camada de neurônios <em>simultaneamente</em> — transformando horas de treinamento em minutos.</p>`;
+
+const STEP_2 =
+`<p>O LLM não enxerga letras, palavras ou frases. Ele opera exclusivamente com <strong>números inteiros</strong> — IDs de tokens. A conversão de texto humano em sequências numéricas é o primeiro passo crítico, realizado pelo <strong>Tokenizer</strong>.</p>
+<p>O algoritmo mais usado é o <span class="highlight">Byte-Pair Encoding (BPE)</span>, implementado por bibliotecas como <strong>Tiktoken</strong> (OpenAI) e <strong>SentencePiece</strong> (Google). O BPE funciona assim:</p>
+<ul><li><strong>Fase 1 — Inicialização:</strong> O vocabulário começa com todos os bytes individuais (256 tokens base). Cada caractere UTF-8 é representado por 1 a 4 bytes.</li><li><strong>Fase 2 — Contagem de Pares:</strong> O algoritmo varre um corpus gigantesco de texto e conta a frequência de cada par adjacente de tokens. O par mais frequente (ex: "t"+"h" → "th") é fundido em um novo token.</li><li><strong>Fase 3 — Merges Iterativos:</strong> Repete-se o processo milhares de vezes (50k-100k merges), construindo um vocabulário de subpalavras. Palavras comuns como "the" viram um único token. Palavras raras são fragmentadas em subpalavras.</li></ul>
+<p>Exemplo prático com a palavra "Inconstitucionalissimamente":</p>
+<div class="code-block"># Tiktoken (cl100k_base) fragmenta em ~8 tokens:
+["In", "const", "itu", "cion", "al", "issim", "amente"]
+→ IDs: [644, 10719, 23823, 14376, 278, 74158, 30496]
+
+# A mesma frase em inglês "Unconstitutionally":
+["Un", "constitutional", "ly"]
+→ IDs: [1844, 66897, 306]   # Apenas 3 tokens!</div>
+<p>Isso explica por que <strong>Português consome mais tokens que Inglês</strong> — o corpus de treinamento tem mais texto em inglês, então essas palavras foram mais fundidas. Mais tokens significam:</p>
+<ul><li><strong>Maior custo</strong> por requisição (APIs cobram por token).</li><li><strong>Menor janela útil</strong> — se o contexto é de 128K tokens, texto em PT ocupa mais espaço.</li><li><strong>Raciocínio fragmentado</strong> — palavras quebradas em pedaços dificultam tarefas como contagem de letras ou rimas.</li></ul>
+<p>Tokens especiais controlam o fluxo: <code>&lt;|bos|&gt;</code> (início de sequência), <code>&lt;|eos|&gt;</code> (fim de sequência), <code>&lt;|pad|&gt;</code> (preenchimento para alinhar batches) e <code>&lt;|im_start|&gt;</code> / <code>&lt;|im_end|&gt;</code> (delimitadores de mensagem em modelos de chat).</p>`;
+
+const STEP_3 =
+`<p>Após a tokenização, cada token ID é apenas um número arbitrário sem significado semântico. O modelo precisa transformar esse ID em algo que capture <em>o significado</em> da palavra. É aqui que entram os <strong>Embeddings</strong>.</p>
+<p>O modelo mantém uma <strong>Embedding Table</strong> — uma matriz gigantesca de dimensão <code>[Vocab_Size × D_model]</code>. Para o GPT-3, isso é <code>[50.257 × 12.288]</code> — ou seja, cada um dos ~50 mil tokens tem um vetor de 12.288 números decimais (Float16) que representa seu significado no espaço vetorial.</p>
+<div class="code-block">Embedding Table (simplificada):
+Token "rei"    → [0.23, -0.87, 0.12, ..., 0.45]  (12.288 dims)
+Token "rainha" → [0.25, -0.82, 0.15, ..., 0.48]  (próximo!)
+Token "carro"  → [-0.91, 0.33, 0.77, ..., -0.62] (distante!)</div>
+<p>Esses vetores não são aleatórios — são <em>aprendidos</em> durante o treinamento. Palavras com significados parecidos ficam <strong>próximas geometricamente</strong> no espaço N-dimensional. A famosa analogia que demonstra isso:</p>
+<div class="code-block">vetor("Rei") - vetor("Homem") + vetor("Mulher") ≈ vetor("Rainha")
+
+# Direções no espaço capturam conceitos:
+# Gênero, tempo verbal, singular/plural, país/capital...</div>
+<p>Para medir a similaridade entre dois vetores, usa-se a <span class="highlight">Similaridade de Cossenos</span>:</p>
+<div class="code-block">cos(θ) = (A · B) / (||A|| × ||B||)
+
+• cos(θ) → 1.0  = Significados idênticos
+• cos(θ) → 0.0  = Sem relação
+• cos(θ) → -1.0 = Significados opostos</div>
+<p>Na prática, o ângulo entre os vetores é medido usando o produto escalar normalizado. Vetores de "Cachorro" e "Gato" formam um ângulo pequeno (cosseno ≈ 0.85), enquanto "Cachorro" e "Democracia" formam ângulo grande (cosseno ≈ 0.12). Essa geometria é o que permite ao modelo entender relações semânticas, analogias, e realizar buscas por similaridade (RAG, Semantic Search).</p>`;
+
+const STEP_4 =
+`<p>Diferente de RNNs que processam tokens sequencialmente (e portanto "sabem" a ordem naturalmente), o Transformer processa <strong>todos os tokens simultaneamente</strong> em paralelo. Sem uma indicação explícita de posição, a frase "cachorro mordeu homem" seria idêntica a "homem mordeu cachorro" — os mesmos embeddings, os mesmos vetores.</p>
+<p>A solução é somar ao embedding de cada token um <strong>vetor de posição</strong> que codifica onde ele está na sequência. O paper original ("Attention Is All You Need") usou <span class="highlight">Encoding Sinusoidal</span>:</p>
+<div class="code-block">PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))
+PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
+
+# pos = posição do token na sequência (0, 1, 2, ...)
+# i   = índice da dimensão no vetor
+# d_model = dimensão do embedding (ex: 512, 4096)</div>
+<p>A intuição é que cada dimensão oscila em uma frequência diferente — como ponteiros de um relógio. As dimensões baixas mudam rapidamente (segundos), as altas mudam lentamente (horas). Isso permite que o modelo aprenda a calcular <em>distâncias relativas</em> entre posições usando combinações lineares.</p>
+<p>Modelos modernos (LLaMA, Mistral, GPT-NeoX) evoluíram para <strong>RoPE (Rotary Position Embeddings)</strong>, que aplica rotações 2D nos vetores de Query e Key baseadas na posição:</p>
+<ul><li><strong>Vantagem 1:</strong> A atenção entre dois tokens depende apenas da <em>distância relativa</em> entre eles, não da posição absoluta — mais natural para linguagem.</li><li><strong>Vantagem 2:</strong> Permite <strong>extrapolar</strong> para sequências maiores que as vistas no treinamento (ex: treinar em 4K tokens e inferir em 128K) usando técnicas como <em>NTK-aware scaling</em> e <em>YaRN</em>.</li></ul>
+<p>Sem Positional Encoding, o Transformer seria um "bag of words" sofisticado — entenderia <em>quais</em> palavras existem, mas não <em>onde</em> cada uma está. É esse componente que permite entender que "Não gosto" é diferente de "Gosto não" em certas construções.</p>`;
+
+const STEP_5 =
+`<p>Antes de 2017, modelos de linguagem dependiam de <strong>RNNs</strong> (Recurrent Neural Networks) e <strong>LSTMs</strong> que processavam texto sequencialmente: token por token, da esquerda para a direita. Isso gerava dois problemas fatais:</p>
+<ul><li><strong>Vanishing Gradient:</strong> Em sequências longas, os gradientes durante o backpropagation encolhiam exponencialmente ao atravessar dezenas de timesteps, fazendo o modelo "esquecer" o começo da frase.</li><li><strong>Sem paralelismo:</strong> Cada token dependia do anterior — impossível aproveitar os milhares de núcleos CUDA de uma GPU. Treinamentos levavam semanas.</li></ul>
+<p>O paper <em>"Attention Is All You Need"</em> (Vaswani et al., 2017) revolucionou tudo ao propor o <span class="highlight">Transformer</span>, que processa <strong>toda a sequência simultaneamente</strong>. A arquitetura original tem duas metades:</p>
+<ul><li><strong>Encoder</strong> (lado esquerdo) — Processa a entrada inteira de uma vez, construindo representações contextualizadas. Usado no BERT, modelos de classificação e embeddings.</li><li><strong>Decoder</strong> (lado direito) — Gera tokens um por vez, usando <em>Causal Masking</em> para não "espiar" tokens futuros. Usado no GPT, LLaMA, Claude.</li></ul>
+<p>Cada bloco do Transformer empilha os seguintes componentes:</p>
+<div class="code-block">┌─────────────────────────────────┐
+│  Input Embeddings + Pos Encoding │
+├─────────────────────────────────┤
+│  ┌─ Multi-Head Attention ─────┐ │  ← Conexão Residual
+│  └────────────────────────────┘ │
+│  + Add & Layer Normalization    │
+│  ┌─ Feed-Forward Network ─────┐ │  ← 2 camadas lineares + SiLU
+│  │  FFN(x) = W₂·SiLU(W₁·x)   │ │
+│  └────────────────────────────┘ │
+│  + Add & Layer Normalization    │
+├─────────────────────────────────┤
+│  (Repete N vezes: 32-96 layers) │
+└─────────────────────────────────┘</div>
+<p>As <strong>Conexões Residuais</strong> (<code>output = layer(x) + x</code>) são essenciais — criam "atalhos" que permitem aos gradientes fluírem diretamente pelas camadas sem degradar, viabilizando redes com 96+ camadas. A <strong>Layer Normalization</strong> estabiliza os valores intermediários, evitando explosão ou colapso numérico.</p>
+<p>Modelos modernos usam variações: <strong>Pre-Norm</strong> (normalização antes da atenção, mais estável), <strong>RMSNorm</strong> (normalização simplificada, usada no LLaMA), <strong>Grouped-Query Attention</strong> (GQA, reduz memória compartilhando cabeças K/V), e <strong>SwiGLU</strong> na FFN (melhor performance que ReLU).</p>`;
+
+const STEP_6 =
+`<p>O <strong>Self-Attention</strong> é o coração do Transformer — o mecanismo que permite que cada token "olhe" para todos os outros tokens da sequência e decida quais são relevantes para si. Na frase "O banco afundou os juros", por que "banco" se conecta a "juros" (economia) e não a "praça" (assento)?</p>
+<p>Cada token é projetado em <strong>três vetores</strong> através de multiplicações matriciais independentes:</p>
+<ul><li><strong>Q (Query)</strong> — "O que eu estou procurando?" — Representa a pergunta que este token faz aos demais. Gerado por <code>Q = X · W_Q</code>.</li><li><strong>K (Key)</strong> — "O que eu tenho a oferecer?" — Representa a informação que este token anuncia para os outros. Gerado por <code>K = X · W_K</code>.</li><li><strong>V (Value)</strong> — "Qual é meu conteúdo real?" — A informação efetiva que será extraída. Gerado por <code>V = X · W_V</code>.</li></ul>
+<p>O cálculo da atenção segue a fórmula do <span class="highlight">Scaled Dot-Product Attention</span>:</p>
+<div class="code-block">Attention(Q, K, V) = softmax( (Q · Kᵀ) / √d_k ) · V
+
+1. Q · Kᵀ  → Matriz de scores [seq_len × seq_len]
+   Cada célula mede "quanto o token i se importa com o token j"
+
+2. / √d_k  → Escalonamento pela raiz da dimensão da Key
+   Sem isso, valores muito grandes "saturam" o softmax
+   (gradientes → 0, treinamento trava)
+
+3. softmax  → Normaliza cada linha para somar 1.0
+   Converte scores brutos em "pesos de atenção" (probabilidades)
+
+4. · V     → Soma ponderada dos Values
+   Cada token recebe um mix dos significados dos outros</div>
+<p>O prefixo <strong>"Multi-Head"</strong> significa que esse cálculo é feito <em>N vezes em paralelo</em> (tipicamente 32-128 cabeças), cada uma com matrizes W_Q, W_K, W_V próprias. Isso permite que diferentes cabeças aprendam padrões distintos:</p>
+<ul><li><strong>Cabeça 1</strong> pode rastrear <em>concordância gramatical</em> (sujeito-verbo).</li><li><strong>Cabeça 2</strong> pode capturar <em>correferência</em> ("ele" → "João").</li><li><strong>Cabeça 3</strong> pode detectar <em>sentimento/ironia</em> no contexto.</li><li><strong>Cabeça 4</strong> pode focar em <em>posição relativa</em> (próximo vs distante).</li></ul>
+<p>Em modelos de <strong>Decoder</strong> (como GPT), aplica-se um <em>Causal Mask</em>: uma máscara triangular que impede tokens de "ver o futuro" — o token na posição 5 só pode atender às posições 0-5. Na inferência, o <strong>KV-Cache</strong> armazena as matrizes K e V já computadas dos tokens anteriores, evitando recalculá-las a cada novo token gerado (crítico para performance).</p>`;
+
+const STEP_7 =
+`<p>Um LLM não nasce sabendo conversar. O processo de treinamento acontece em <strong>3 fases distintas</strong>, cada uma com objetivos e datasets diferentes:</p>
+<p><strong>Fase 1 — Pré-Treinamento (Pre-Training):</strong> O modelo é treinado na tarefa de <span class="highlight">Next-Token Prediction</span> — dado um texto, prever o próximo token. O dataset é colossal: trilhões de tokens raspados da internet (Common Crawl, Wikipedia, livros, código GitHub, artigos científicos).</p>
+<div class="code-block">Input:  "O gato sentou no"
+Target: "tapete"
+
+Loss = CrossEntropy(softmax(logits), target_token_id)
+
+# O modelo ajusta bilhões de pesos para minimizar essa Loss
+# Treinamento: ~1-3 meses em milhares de GPUs H100
+# Custo: $2M - $100M+ por run completo</div>
+<p><strong>Fase 2 — Fine-Tuning Supervisionado (SFT):</strong> O modelo pré-treinado sabe completar texto, mas não sabe <em>seguir instruções</em>. Humanos criam milhares de exemplos de pares (instrução, resposta ideal). O modelo é re-treinado nesse dataset curado, aprendendo o formato de "assistente útil".</p>
+<ul><li>Dataset típico: 10K-100K exemplos de alta qualidade, escritos e revisados por anotadores.</li><li>O modelo aprende a responder perguntas, seguir formatos, recusar conteúdo nocivo, e ser conciso ou detalhado conforme solicitado.</li></ul>
+<p><strong>Fase 3 — RLHF / DPO (Alinhamento):</strong> A fase que faz o modelo ser <em>preferível</em> para humanos. No <strong>RLHF</strong> (Reinforcement Learning from Human Feedback), anotadores comparam pares de respostas e escolhem a melhor. Um "Reward Model" é treinado nessas preferências e usado para otimizar o LLM via PPO (Proximal Policy Optimization).</p>
+<div class="code-block">RLHF Pipeline:
+1. Gera 2+ respostas para cada prompt
+2. Humanos rankam: Resposta A > Resposta B
+3. Treina Reward Model nos rankings
+4. Otimiza LLM via PPO para maximizar reward
+
+DPO (Direct Preference Optimization) — simplificação:
+→ Elimina o Reward Model separado
+→ Otimiza diretamente nas preferências humanas
+→ Mais estável e barato que RLHF clássico</div>
+<p><strong>Técnicas Modernas de Fine-Tuning & Inferência:</strong></p>
+<div class="code-block">LoRA (Low-Rank Adaptation):
+  Em vez de treinar TODOS os pesos W (bilhões), decompõe
+  o update: ΔW = B × A, onde B ∈ ℝᵈˣʳ, A ∈ ℝʳˣᵈ, r ≪ d
+  → Ex: d=4096, r=16 → 131K params vs 16.7M (99.2% menos!)
+  → Treina apenas B e A, congela W original
+  → Múltiplos LoRA adapters para tarefas diferentes
+
+QLoRA (Quantized LoRA):
+  → Quantiza modelo base para 4-bit (NF4 data type)
+  → LoRA adapters em FP16/BF16 sobre base quantizado
+  → Fine-tune de LLaMA 65B em 1× GPU 48GB!
+
+Mixture of Experts (MoE):
+  Cada camada FFN tem N "experts" (sub-redes)
+  Router: G(x) = TopK(softmax(W_g · x))
+  → Mixtral 8x7B: 8 experts, ativa 2 por token
+    → 46.7B total, ~12.9B ativos por forward pass
+  → Escala capacidade sem escalar compute linearmente
+
+Paged Attention (vLLM):
+  KV-Cache: cresce com seq_len × batch × num_heads × d_head
+  Problema: fragmentação de memória GPU
+  → Solução: KV-Cache em blocos não-contíguos (como pages de VM)
+  → Alocação dinâmica, sem desperdício de memória
+  → Continuous Batching: novos requests entram sem esperar
+    batch atual terminar → throughput ~24× maior</div>
+<p>Um fenômeno fascinante é a <strong>Emergência</strong>: capacidades que surgem apenas com escala. Modelos pequenos não conseguem fazer raciocínio multi-step, mas a partir de ~100B parâmetros, habilidades como Chain-of-Thought, analogias complexas e tradução zero-shot "aparecem" sem terem sido explicitamente treinadas.</p>`;
+
+const STEP_8 =
+`<p>Na inferência, o modelo gera texto <strong>um token por vez</strong> (autoregressão). A cada passo, toda a sequência gerada até agora é processada pelo Transformer, produzindo um vetor de <span class="highlight">Logits</span> — valores brutos (não normalizados) para cada um dos ~128K tokens do vocabulário.</p>
+<p>Os logits são convertidos em probabilidades pela função <strong>Softmax</strong>:</p>
+<div class="code-block">P(token_i) = e^(logit_i) / Σ e^(logit_j)  para todo j
+
+# Exemplo simplificado (vocab de 5 tokens):
+Logits:  [2.1, 5.8, 1.3, 0.2, -1.0]
+Softmax: [0.02, 0.91, 0.01, 0.003, 0.001]
+→ Token 2 tem 91% de chance de ser escolhido</div>
+<p>Mas simplesmente escolher o token mais provável (Greedy Decoding) gera texto repetitivo e robótico. Os <strong>Samplers</strong> controlam a criatividade e qualidade:</p>
+<ul><li><strong>Temperature (T)</strong> — Escala os logits antes do softmax: <code>logit_i / T</code>. Com T=0.1, o modelo fica extremamente determinístico (quase greedy). Com T=1.5, a distribuição se achata e tokens improváveis ganham chance, gerando texto mais criativo mas com risco de incoerência.</li><li><strong>Top-K</strong> — Mantém apenas os K tokens mais prováveis. <code>Top-K=50</code> descarta tokens abaixo da 50ª posição e redistribui probabilidades entre os 50 sobreviventes.</li><li><strong>Top-P (Nucleus Sampling)</strong> — Seleciona o menor conjunto de tokens cuja soma de probabilidades atinge P. <code>Top-P=0.9</code> inclui tokens até acumular 90% da massa probabilística. Adapta-se dinamicamente: em momentos de certeza inclui poucos tokens, em momentos ambíguos inclui muitos.</li><li><strong>Repetition Penalty</strong> — Penaliza tokens que já apareceram, reduzindo loops infinitos. Divide o logit dos tokens repetidos por um fator (ex: 1.2).</li><li><strong>Min-P</strong> — Filtra tokens cuja probabilidade seja menor que <code>min_p × prob_do_token_mais_provável</code>. Mais adaptativo que Top-K fixo.</li></ul>
+<div class="code-block"># Fluxo completo de geração:
+1. Input tokenizado → Forward pass pelo Transformer
+2. Logits da última posição (128K valores)
+3. Logits / Temperature
+4. Filtro Top-K ou Top-P ou Min-P
+5. Softmax → Probabilidades
+6. Amostragem estocástica → Token escolhido
+7. Append ao contexto → Volta ao passo 1
+8. Repete até &lt;eos&gt; ou max_tokens</div>
+<p>O <strong>KV-Cache</strong> é crítico para performance: como apenas o último token é "novo", as matrizes K e V dos tokens anteriores são reutilizadas do cache. Sem isso, gerar 1000 tokens exigiria reprocessar a sequência inteira 1000 vezes — com cache, cada step processa apenas o token novo.</p>
+<p><strong>Speculative Decoding</strong> — acelera inferência 2-3×: um modelo <em>draft</em> menor (ex: 7B) gera K tokens candidatos rapidamente. O modelo principal (ex: 70B) verifica todos em UM único forward pass paralelo. Tokens aceitos são mantidos, o primeiro rejeitado é regenerado pelo modelo grande. Resultado: qualidade idêntica ao modelo grande, mas com throughput significativamente maior.</p>`;
+
+export const STEPS_CONTENT = [
+  STEP_1,
+  STEP_2,
+  STEP_3,
+  STEP_4,
+  STEP_5,
+  STEP_6,
+  STEP_7,
+  STEP_8
+];
